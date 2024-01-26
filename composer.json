@@ -1,0 +1,35 @@
+{
+    "name": "daun/laravel-latte",
+    "description": "Use Latte templates in Laravel views",
+    "keywords": [ "laravel", "latte", "nette", "view", "engine", "templating" ],
+    "homepage": "https://github.com/daun/laravel-latte",
+    "autoload": {
+        "psr-4": {
+            "Daun\\LaravelLatte\\": "src"
+        }
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Philipp Daun",
+            "email": "post@philippdaun.net",
+            "homepage": "https://philippdaun.net"
+        }
+    ],
+    "support": {
+        "email": "post@philippdaun.net"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Daun\\LaravelLatte\\ServiceProvider"
+            ],
+            "aliases": {
+                "Latte": "Daun\\LaravelLatte\\Facades\\Latte"
+            }
+        }
+    },
+    "require": {
+        "latte/latte": "^3.0"
+    }
+}
