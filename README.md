@@ -1,6 +1,8 @@
 # Laravel Latte
 
-Add support for the [Latte](https://latte.nette.org) templating engine in [Laravel](https://laravel.com) views.
+Add support for the [Latte](https://latte.nette.org) templating engine in [Laravel](https://laravel.com)
+views. Allows extensive customization, adds a translator bridge to use Laravel translations and
+allows Blade-style dot syntax when including partials.
 
 ## Installation
 
