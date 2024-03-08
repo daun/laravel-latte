@@ -4,6 +4,8 @@ namespace Tests;
 
 use Daun\LaravelLatte\ServiceProvider;
 use Illuminate\Config\Repository;
+use Illuminate\Events\Dispatcher;
+use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\Application;
 use Illuminate\View\Engines\EngineResolver;
 use Illuminate\View\Factory;
@@ -37,13 +39,13 @@ abstract class TestCase extends BaseTestCase
         $app['path.storage'] = __DIR__ . '/storage';
 
         // Filesystem
-        $files = Mockery::mock('Illuminate\Filesystem\Filesystem');
+        $files = Mockery::mock(Filesystem::class);
         $app['files'] = $files;
 
         // View
         $finder = Mockery::mock('Illuminate\View\ViewFinderInterface');
         $finder->shouldReceive('addExtension');
-        $app['view'] = new Factory(new EngineResolver, $finder, Mockery::mock('Illuminate\Events\Dispatcher'));
+        $app['view'] = new Factory(new EngineResolver, $finder, Mockery::mock(Dispatcher::class));
 
         // Config
         $defaults = include $this->root . '/../config/latte.php';
