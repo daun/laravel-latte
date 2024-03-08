@@ -14,7 +14,8 @@ class LatteEngineFactory
     public function __construct(
         protected Loader $loader,
         protected Repository $config
-    ) {}
+    ) {
+    }
 
     public function create(): Engine
     {
@@ -32,9 +33,13 @@ class LatteEngineFactory
         }
 
         if ($layout = $this->getDefaultLayout()) {
-            $latte->addProvider('defaultLayout', fn() => $layout);
+            $latte->addProvider('defaultLayout', fn () => $layout);
             $latte->addProvider('coreParentFinder', function (Template $template) {
-                if ($template->getReferenceType()) return; // ignore includes/embeds
+                // ignore includes/embeds
+                if ($template->getReferenceType()) {
+                    return;
+                }
+
                 return ($template->global->defaultLayout)($template);
             });
         }
@@ -45,29 +50,34 @@ class LatteEngineFactory
         return $latte;
     }
 
-    protected function isDebug() {
+    protected function isDebug()
+    {
         return $this->config->get('app.debug');
     }
 
-    protected function getCacheDirectory() {
+    protected function getCacheDirectory()
+    {
         return $this->config->get('latte.compiled') ?: $this->config->get('view.compiled');
     }
 
-    protected function getDefaultLayout() {
+    protected function getDefaultLayout()
+    {
         return $this->config->get('latte.default_layout');
     }
 
-    protected function getUserExtensions() {
+    protected function getUserExtensions()
+    {
         return $this->config->get('latte.extensions', []);
     }
 
-    protected function getTranslatorExtension() {
+    protected function getTranslatorExtension()
+    {
         $translator = $this->config->get('latte.translator');
         if (empty($translator)) {
             return null;
-        } else if (is_string($translator)) {
+        } elseif (is_string($translator)) {
             return new $translator();
-        } else if (is_callable($translator)) {
+        } elseif (is_callable($translator)) {
             return $translator();
         } else {
             return new LaravelTranslatorExtension();

@@ -30,7 +30,7 @@ class ServiceProvider extends BaseServiceProvider
 
     protected function loadConfiguration()
     {
-        $configPath = __DIR__ . '/../config/latte.php';
+        $configPath = __DIR__.'/../config/latte.php';
         $this->publishes([$configPath => config_path('latte.php')], 'config');
         $this->mergeConfigFrom($configPath, 'latte');
     }
@@ -56,7 +56,8 @@ class ServiceProvider extends BaseServiceProvider
         });
 
         $this->app->extend('view.engine.resolver', function ($resolver) {
-            $resolver->register('latte', fn() => $this->app['latte.bridge']);
+            $resolver->register('latte', fn () => $this->app['latte.bridge']);
+
             return $resolver;
         });
     }

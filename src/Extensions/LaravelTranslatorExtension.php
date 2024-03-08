@@ -15,7 +15,6 @@ use Latte\Extension;
  * {(trans_key|translate:$lang)}           or    {_'trans_key', $lang}
  * {(trans_key|translate:[some => data])}  or    {_'trans_key', [some => data]}
  */
-
 class LaravelTranslatorExtension extends Extension
 {
     protected TranslatorExtension $translator;
@@ -25,7 +24,8 @@ class LaravelTranslatorExtension extends Extension
         $this->translator = new TranslatorExtension([$this, 'translate']);
     }
 
-    public function translate($key, $replace = [], $locale = null) {
+    public function translate($key, $replace = [], $locale = null)
+    {
         if (is_string($replace) && ! $locale) {
             $locale = $replace;
             $replace = [];
@@ -34,7 +34,8 @@ class LaravelTranslatorExtension extends Extension
         return trans($key, $replace, $locale);
     }
 
-    public function translateChoice($key, $count, $replace = [], $locale = null) {
+    public function translateChoice($key, $count, $replace = [], $locale = null)
+    {
         return trans_choice($key, $count, $replace, $locale);
     }
 
@@ -42,9 +43,9 @@ class LaravelTranslatorExtension extends Extension
     {
         return [
             ...$this->translator->getFilters(),
-            'translate' => fn(...$args) => $this->translate(...$args),
-            'trans' => fn(...$args) => $this->translate(...$args),
-            'transChoice' => fn(...$args) => $this->translateChoice(...$args),
+            'translate' => fn (...$args) => $this->translate(...$args),
+            'trans' => fn (...$args) => $this->translate(...$args),
+            'transChoice' => fn (...$args) => $this->translateChoice(...$args),
         ];
     }
 

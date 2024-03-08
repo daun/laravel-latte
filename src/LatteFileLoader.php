@@ -13,7 +13,8 @@ class LatteFileLoader implements Loader
 {
     public function __construct(
         protected Factory $view
-    ) {}
+    ) {
+    }
 
     public function finder(): FileViewFinder
     {
@@ -35,7 +36,7 @@ class LatteFileLoader implements Loader
 
         if ($this->isExpired($path, time())) {
             if (@touch($path) === false) {
-                trigger_error("File's modification time is in the future. Cannot update it: " . error_get_last()['message'], E_USER_WARNING);
+                trigger_error("File's modification time is in the future. Cannot update it: ".error_get_last()['message'], E_USER_WARNING);
             }
         }
 
@@ -46,6 +47,7 @@ class LatteFileLoader implements Loader
     {
         try {
             $mtime = $this->filesystem()->lastModified($path);
+
             return $mtime > $time;
         } catch (\Throwable $th) {
             return true;
@@ -89,6 +91,7 @@ class LatteFileLoader implements Loader
     protected function findViewPath(string $name): string
     {
         $name = $this->normalizeViewName($name);
+
         return $this->finder()->find($name);
     }
 
@@ -107,6 +110,7 @@ class LatteFileLoader implements Loader
                 $res[] = $part;
             }
         }
+
         return implode(DIRECTORY_SEPARATOR, $res);
     }
 }
