@@ -2,9 +2,9 @@
 
 use Daun\LaravelLatte\Facades\Latte;
 
-test('facade instance', function () {
+test('creates correct facade instance', function () {
     $app = $this->getApplication();
-    $this->bootServiceProvider($app);
+    $this->createAndBootServiceProvider($app);
     Latte::setFacadeApplication($app);
 
     expect(Latte::getFacadeRoot())->toBeInstanceOf('Latte\Engine');

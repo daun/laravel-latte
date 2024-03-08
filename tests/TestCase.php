@@ -53,7 +53,12 @@ abstract class TestCase extends BaseTestCase
         return $app;
     }
 
-    protected function bootServiceProvider(Application $app): ServiceProvider
+    protected function createServiceProvider(Application $app): ServiceProvider
+    {
+        return new ServiceProvider($app);
+    }
+
+    protected function createAndBootServiceProvider(Application $app): ServiceProvider
     {
         $provider = new ServiceProvider($app);
         $provider->register();
