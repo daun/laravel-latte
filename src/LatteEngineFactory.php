@@ -19,6 +19,12 @@ class LatteEngineFactory
     ) {
     }
 
+    public static function make(Loader $loader, Repository $config): Engine
+    {
+        $factory = new static($loader, $config);
+        return $factory->create();
+    }
+
     public function create(): Engine
     {
         $latte = new Engine;

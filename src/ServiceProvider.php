@@ -26,7 +26,7 @@ class ServiceProvider extends BaseServiceProvider
     public function boot()
     {
         $this->loadConfiguration();
-        $this->registerViewExtensions();
+        $this->addViewExtensions();
     }
 
     protected function loadConfiguration()
@@ -46,7 +46,7 @@ class ServiceProvider extends BaseServiceProvider
     protected function registerLatteInstance(): void
     {
         $this->app->singleton('latte.engine', function (Application $app) {
-            return (new LatteEngineFactory($app['latte.loader'], $app['config']))->create();
+            return LatteEngineFactory::make($app['latte.loader'], $app['config']);
         });
     }
 
@@ -63,7 +63,7 @@ class ServiceProvider extends BaseServiceProvider
         });
     }
 
-    protected function registerViewExtensions()
+    protected function addViewExtensions()
     {
         $extensions = $this->app['config']->get('latte.file_extensions', []);
         foreach ($extensions as $extension) {
