@@ -24,7 +24,7 @@ class LaravelTranslatorExtension extends Extension
         $this->translator = new TranslatorExtension([$this, 'translate']);
     }
 
-    public function translate($key, $replace = [], $locale = null)
+    public function translate(?string $key, string|array $replace = [], ?string $locale = null): string|array|null
     {
         if (is_string($replace) && ! $locale) {
             $locale = $replace;
@@ -34,9 +34,14 @@ class LaravelTranslatorExtension extends Extension
         return trans($key, $replace, $locale);
     }
 
-    public function translateChoice($key, $count, $replace = [], $locale = null)
+    public function translateChoice(string $key, \Countable|int|float|array $number, string|array $replace = [], ?string $locale = null): string
     {
-        return trans_choice($key, $count, $replace, $locale);
+        if (is_string($replace) && ! $locale) {
+            $locale = $replace;
+            $replace = [];
+        }
+
+        return trans_choice($key, $number, $replace, $locale);
     }
 
     public function getFilters(): array
@@ -54,7 +59,7 @@ class LaravelTranslatorExtension extends Extension
         return $this->translator->getTags();
     }
 
-    public static function toValue($args): mixed
+    public static function toValue(mixed $args): mixed
     {
         return TranslatorExtension::toValue($args);
     }

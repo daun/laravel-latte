@@ -5,7 +5,9 @@ namespace Daun\LaravelLatte;
 use Daun\LaravelLatte\Events\LatteEngineCreated;
 use Daun\LaravelLatte\Extensions\LaravelTranslatorExtension;
 use Illuminate\Contracts\Config\Repository;
+use Illuminate\Support\Collection;
 use Latte\Engine;
+use Latte\Extension;
 use Latte\Loader;
 use Latte\Runtime\Template;
 
@@ -29,7 +31,7 @@ class LatteEngineFactory
         }
 
         foreach ($this->getUserExtensions() as $extension) {
-            $latte->addExtension(new $extension());
+            $latte->addExtension($extension);
         }
 
         if ($layout = $this->getDefaultLayout()) {
@@ -50,27 +52,28 @@ class LatteEngineFactory
         return $latte;
     }
 
-    protected function isDebug()
+    protected function isDebug(): bool
     {
-        return $this->config->get('app.debug');
+        return (bool) $this->config->get('app.debug');
     }
 
-    protected function getCacheDirectory()
+    protected function getCacheDirectory(): string
     {
         return $this->config->get('latte.compiled') ?: $this->config->get('view.compiled');
     }
 
-    protected function getDefaultLayout()
+    protected function getDefaultLayout(): ?string
     {
         return $this->config->get('latte.default_layout');
     }
 
-    protected function getUserExtensions()
+    protected function getUserExtensions(): Collection
     {
-        return $this->config->get('latte.extensions', []);
+        $extensions = $this->config->get('latte.extensions', []);
+        return collect($extensions)->map(fn ($class) => new $class());
     }
 
-    protected function getTranslatorExtension()
+    protected function getTranslatorExtension(): ?Extension
     {
         $translator = $this->config->get('latte.translator');
         if (empty($translator)) {
