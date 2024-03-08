@@ -1,6 +1,8 @@
 <?php
 
-test('registers bindings', function () {
+use Daun\LaravelLatte\ViewEngineBridge;
+
+test('provides bindings', function () {
     $app = $this->getApplication();
     $provider = $this->createServiceProvider($app);
 
@@ -17,4 +19,11 @@ test('registers bindings', function () {
     foreach ($provider->provides() as $binding) {
         expect($app->bound($binding))->toBeTrue();
     }
+});
+
+test('binds view engine bridge', function () {
+    $app = $this->getApplication();
+    $this->createAndBootServiceProvider($app);
+
+    expect($app['latte.bridge'])->toBeInstanceOf(ViewEngineBridge::class);
 });
