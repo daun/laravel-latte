@@ -12,6 +12,7 @@ class ServiceProvider extends BaseServiceProvider
         return [
             'latte.engine',
             'latte.loader',
+            'latte.bridge',
         ];
     }
 
