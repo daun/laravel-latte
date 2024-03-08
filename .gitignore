@@ -2,3 +2,4 @@ vendor
 .DS_STORE
 Thumbs.db
 /.vscode
+.phpunit.result.cache

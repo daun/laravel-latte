@@ -57,9 +57,9 @@ class LatteEngineFactory
         return (bool) $this->config->get('app.debug');
     }
 
-    protected function getCacheDirectory(): string
+    protected function getCacheDirectory(): ?string
     {
-        return $this->config->get('latte.compiled') ?: $this->config->get('view.compiled');
+        return $this->config->get('latte.compiled') ?: $this->config->get('view.compiled') ?: null;
     }
 
     protected function getDefaultLayout(): ?string
