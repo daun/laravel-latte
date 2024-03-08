@@ -64,7 +64,7 @@ class ServiceProvider extends BaseServiceProvider
 
     protected function registerViewExtensions()
     {
-        $extensions = $this->app->config->get('latte.file_extensions', []);
+        $extensions = $this->app['config']->get('latte.file_extensions', []);
         foreach ($extensions as $extension) {
             $this->app['view']->addExtension($extension, 'latte');
         }
