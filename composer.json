@@ -33,5 +33,15 @@
         "php": "^8.0",
         "latte/latte": "^3.0",
         "laravel/framework": "^9.0 || ^10.0"
+    },
+    "require-dev": {
+        "larastan/larastan": "^2.9",
+        "laravel/pint": "^1.14",
+        "orchestra/testbench": "^8.21"
+    },
+    "scripts": {
+        "format": "./vendor/bin/pint",
+        "lint": "./vendor/bin/pint --test",
+        "analyse": "./vendor/bin/phpstan analyse --memory-limit=2G"
     }
 }
