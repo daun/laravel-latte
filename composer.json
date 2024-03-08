@@ -5,9 +5,13 @@
     "homepage": "https://github.com/daun/laravel-latte",
     "autoload": {
         "psr-4": {
-            "Daun\\LaravelLatte\\": "src",
-            "Daun\\LaravelLatte\\Tests\\": "tests"
+            "Daun\\LaravelLatte\\": "src"
         }
+    },
+    "autoload-dev": {
+      "psr-4": {
+        "Tests\\": "tests/"
+      }
     },
     "license": "MIT",
     "authors": [
@@ -39,13 +43,19 @@
         "larastan/larastan": "^2.9",
         "laravel/pint": "^1.14",
         "orchestra/testbench": "^8.21",
-        "phpunit/phpunit": "^10.5",
-        "mockery/mockery": "^1.6"
+        "mockery/mockery": "^1.6",
+        "pestphp/pest": "^2.34",
+        "pestphp/pest-plugin-laravel": "^2.3"
     },
     "scripts": {
         "format": "./vendor/bin/pint",
         "lint": "./vendor/bin/pint --test",
         "analyse": "./vendor/bin/phpstan analyse --memory-limit=2G",
-        "test": "./vendor/bin/phpunit"
+        "test": "./vendor/bin/pest"
+    },
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
     }
 }
