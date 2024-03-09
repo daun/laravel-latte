@@ -10,7 +10,7 @@ use Latte\Extension;
 use Latte\Loader;
 use Latte\Runtime\Template;
 
-class LatteEngineFactory
+final class LatteEngineFactory
 {
     public function __construct(
         protected Loader $loader,
