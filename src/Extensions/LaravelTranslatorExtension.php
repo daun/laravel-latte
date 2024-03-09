@@ -67,11 +67,11 @@ class LaravelTranslatorExtension extends Extension
     public static function prepareArguments(mixed $args): array
     {
         $namedArgs = [];
-        $namedArgsPosition = 0;
+        $namedArgsPosition = null;
         $i = 0;
         foreach ($args as $key => $value) {
             if (is_string($key)) {
-                $namedArgsPosition = $i;
+                $namedArgsPosition = $namedArgsPosition ?? $i;
                 $namedArgs[$key] = $value;
                 unset($args[$key]);
             }

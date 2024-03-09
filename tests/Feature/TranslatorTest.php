@@ -30,6 +30,7 @@ test('allows named translation arguments', function () {
     $this->bootServiceProvider();
 
     $this->latte("{_'messages.welcome', name: 'Eve'}")->assertSee('Welcome, Eve');
+    $this->latte("{_'messages.welcome', name: 'Eve', age: 16}")->assertSee('Welcome, Eve');
 });
 
 test('allows overriding locale', function () {
