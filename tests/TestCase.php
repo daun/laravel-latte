@@ -32,7 +32,7 @@ abstract class TestCase extends LaravelTestCase
     {
         $app['path.lang'] = __DIR__.'/fixtures/lang';
 
-        $defaults = include __DIR__ . '/../config/latte.php';
+        $defaults = include __DIR__.'/../config/latte.php';
         tap($app['config'], function (Repository $config) use ($defaults) {
             $config->set('latte', $defaults);
             $config->set('view.paths', [__DIR__.'/fixtures/views']);

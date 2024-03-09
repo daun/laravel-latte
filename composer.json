@@ -36,7 +36,7 @@
         }
     },
     "require": {
-        "php": "^8.0",
+        "php": "^8.1",
         "latte/latte": "^3.0",
         "laravel/framework": "^9.0 || ^10.0"
     },
@@ -52,7 +52,9 @@
         "format": "./vendor/bin/pint",
         "lint": "./vendor/bin/pint --test",
         "analyse": "./vendor/bin/phpstan analyse --memory-limit=2G",
-        "test": "./vendor/bin/pest"
+        "test": "./vendor/bin/pest",
+        "test:coverage": "./vendor/bin/pest --coverage",
+        "test:ci": "./vendor/bin/pest --coverage-clover coverage.xml"
     },
     "config": {
         "allow-plugins": {

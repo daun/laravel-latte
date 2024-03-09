@@ -3,7 +3,6 @@
 namespace Daun\LaravelLatte;
 
 use Daun\LaravelLatte\Events\LatteEngineCreated;
-use Daun\LaravelLatte\Extensions\LaravelTranslatorExtension;
 use Illuminate\Contracts\Config\Repository;
 use Illuminate\Support\Collection;
 use Latte\Engine;
@@ -11,7 +10,7 @@ use Latte\Extension;
 use Latte\Loader;
 use Latte\Runtime\Template;
 
-class LatteEngineFactory
+final class LatteEngineFactory
 {
     public function __construct(
         protected Loader $loader,
@@ -21,7 +20,8 @@ class LatteEngineFactory
 
     public static function make(Loader $loader, Repository $config): Engine
     {
-        $factory = new static($loader, $config);
+        $factory = new self($loader, $config);
+
         return $factory->create();
     }
 
@@ -76,20 +76,19 @@ class LatteEngineFactory
     protected function getUserExtensions(): Collection
     {
         $extensions = $this->config->get('latte.extensions', []);
+
         return collect($extensions)->map(fn ($class) => new $class());
     }
 
     protected function getTranslatorExtension(): ?Extension
     {
         $translator = $this->config->get('latte.translator');
-        if (empty($translator)) {
+        if ($translator === null) {
             return null;
         } elseif (is_string($translator)) {
             return new $translator();
-        } elseif (is_callable($translator)) {
-            return $translator();
         } else {
-            return new LaravelTranslatorExtension();
+            throw new \Exception('Invalid translator extension: must be class name or null.');
         }
     }
 }

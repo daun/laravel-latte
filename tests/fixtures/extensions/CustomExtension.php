@@ -9,7 +9,7 @@ class CustomExtension extends Extension
     public function getFilters(): array
     {
         return [
-            'customFilter' => fn ($string) => "CUSTOM({$string})"
+            'customFilter' => fn ($string) => "CUSTOM({$string})",
         ];
     }
 }
