@@ -131,8 +131,8 @@ class LatteFileLoader implements Loader
             return $path;
         } else {
             foreach ($this->extensions() as $extension) {
-                if ($this->fileExists($path.'.'.$extension)) {
-                    return $path.'.'.$extension;
+                if ($this->fileExists("{$path}.{$extension}")) {
+                    return "{$path}.{$extension}";
                 }
             }
         }
