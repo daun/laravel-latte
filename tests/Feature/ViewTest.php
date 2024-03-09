@@ -11,7 +11,7 @@ test('passes data into view', function () {
     $app = $this->createApplication();
     $this->createAndBootServiceProvider($app);
 
-    $this->view('basic-data', [
+    $this->view('data.data', [
         'name' => 'John',
         'age' => 31,
         'hobbies' => ['fishing', 'hiking', 'camping'],

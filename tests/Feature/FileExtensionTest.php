@@ -12,8 +12,8 @@ test('prefers standard file extension', function () {
     $app = $this->createApplication();
     $this->createAndBootServiceProvider($app);
 
-    // should load extensions[.latte] instead of extensions[.latte.html]
-    $this->view('extensions')->assertSee('[.latte]');
+    // should load view[.latte] instead of view[.latte.html]
+    $this->view('extensions.view')->assertSee('[.latte]');
 });
 
 test('allows custom file extension', function () {
@@ -21,6 +21,6 @@ test('allows custom file extension', function () {
     $this->modifyConfig($app, 'latte.file_extensions', ['latte.custom']);
     $this->createAndBootServiceProvider($app);
 
-    // should load extensions[.latte.custom]
-    $this->view('extensions')->assertSee('[.latte.custom]');
+    // should load view[.latte.custom]
+    $this->view('extensions.view')->assertSee('[.latte.custom]');
 });
