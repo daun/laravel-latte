@@ -11,11 +11,11 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        php: [ '8.0', '8.1', '8.2', '8.3' ]
+        php: [ '8.1', '8.2', '8.3' ]
         laravel: [ '9', '10' ]
-        exclude:
-          - php: '8.0'
-            laravel: '10'
+        # exclude:
+        #   - php: '8.0'
+        #     laravel: '10'
 
     name: PHP ${{ matrix.php }}; Laravel ${{ matrix.laravel }}
 
@@ -38,7 +38,7 @@ jobs:
         with:
           timeout_minutes: 5
           max_attempts: 5
-          command: composer require "laravel/framework:9.*" "phpunit/phpunit:^9.3.7" --no-update --no-interaction
+          command: composer require "laravel/framework:9.*" "pestphp/pest:^2.3.4" --no-update --no-interaction
         if: "matrix.laravel == '9'"
 
       - name: Select Laravel 10
@@ -46,7 +46,7 @@ jobs:
         with:
           timeout_minutes: 5
           max_attempts: 5
-          command: composer require "laravel/framework:10.*" "phpunit/phpunit:^9.3.7" --no-update --no-interaction
+          command: composer require "laravel/framework:10.*" "pestphp/pest:^2.3.4" --no-update --no-interaction
         if: "matrix.laravel == '10'"
 
       - name: Install PHP Dependencies
