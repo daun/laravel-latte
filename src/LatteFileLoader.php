@@ -42,11 +42,7 @@ class LatteFileLoader implements Loader
 
     public function getContent(string $name): string
     {
-        if ($this->fileExists($name)) {
-            return $this->getFile($name);
-        }
-
-        return $this->getFile($this->resolve($name));
+        return $this->getFile($name);
     }
 
     public function isExpired(string $path, int $time): bool
