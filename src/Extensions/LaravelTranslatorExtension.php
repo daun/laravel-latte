@@ -59,11 +59,6 @@ class LaravelTranslatorExtension extends Extension
         return $this->translator->getTags();
     }
 
-    public static function toValue(mixed $args): mixed
-    {
-        return TranslatorExtension::toValue($args);
-    }
-
     public static function prepareArguments(mixed $args): array
     {
         $namedArgs = [];
