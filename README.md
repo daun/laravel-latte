@@ -1,5 +1,10 @@
 # Laravel Latte
 
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/daun/laravel-latte.svg)](https://packagist.org/packages/daun/laravel-latte)
+[![Test Status](https://img.shields.io/github/actions/workflow/status/daun/laravel-latte/ci.yml?label=tests)](https://github.com/daun/laravel-latte/actions/workflows/ci.yml)
+[![Code Coverage](https://img.shields.io/codecov/c/github/daun/laravel-latte)](https://app.codecov.io/gh/daun/laravel-latte)
+[![License](https://img.shields.io/github/license/daun/laravel-latte.svg)](https://github.com/daun/laravel-latte/blob/master/LICENSE)
+
 Add support for the [Latte](https://latte.nette.org) templating engine in [Laravel](https://laravel.com)
 views. Allows extensive customization, adds a translator bridge to use Laravel translations and
 allows Blade-style dot syntax when including partials.
@@ -9,6 +14,11 @@ allows Blade-style dot syntax when including partials.
 ``` bash
 composer require daun/laravel-latte
 ```
+
+## Requirements
+
+- PHP 8.1+
+- Laravel 9+
 
 ## Usage
 
