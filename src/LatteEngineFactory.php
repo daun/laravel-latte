@@ -3,7 +3,6 @@
 namespace Daun\LaravelLatte;
 
 use Daun\LaravelLatte\Events\LatteEngineCreated;
-use Daun\LaravelLatte\Extensions\LaravelTranslatorExtension;
 use Illuminate\Contracts\Config\Repository;
 use Illuminate\Support\Collection;
 use Latte\Engine;
