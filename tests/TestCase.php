@@ -10,10 +10,13 @@ use Illuminate\Foundation\Application;
 use Illuminate\View\Engines\EngineResolver;
 use Illuminate\View\Factory;
 use Mockery;
+use Orchestra\Testbench\Concerns\CreatesApplication;
 use PHPUnit\Framework\TestCase as BaseTestCase;
 
 abstract class TestCase extends BaseTestCase
 {
+    use CreatesApplication;
+
     protected $root;
 
     protected function setUp(): void
