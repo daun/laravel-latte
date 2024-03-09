@@ -4,7 +4,6 @@ namespace Daun\LaravelLatte\Extensions;
 
 use Latte\Essential\TranslatorExtension;
 use Latte\Extension;
-use Latte\Runtime\FilterInfo;
 
 /**
  * Latte extension for using Laravel's translation stores.
@@ -82,6 +81,7 @@ class LaravelTranslatorExtension extends Extension
             $args = array_values($args);
             array_splice($args, $namedArgsPosition, 0, [$namedArgs]);
         }
+
         return $args;
     }
 }

@@ -22,6 +22,7 @@ class LatteEngineFactory
     public static function make(Loader $loader, Repository $config): Engine
     {
         $factory = new static($loader, $config);
+
         return $factory->create();
     }
 
@@ -76,6 +77,7 @@ class LatteEngineFactory
     protected function getUserExtensions(): Collection
     {
         $extensions = $this->config->get('latte.extensions', []);
+
         return collect($extensions)->map(fn ($class) => new $class());
     }
 
