@@ -31,11 +31,19 @@ abstract class TestCase extends BaseTestCase
 
     protected function defineEnvironment(Application $app)
     {
-        tap($app['config'], function (Repository $config) {
-            $defaults = include __DIR__ . '/../config/latte.php';
-            $config->set('latte', $defaults);
+        $defaults = include __DIR__ . '/../config/latte.php';
 
+        tap($app['config'], function (Repository $config) use ($defaults) {
+            $config->set('latte', $defaults);
             $config->set('view.paths', [__DIR__.'/fixtures/views']);
+        });
+    }
+
+    public function modifyConfig(Application $app, string $key, mixed $data)
+    {
+        tap($app['config'], function (Repository $config) use ($key, $data) {
+            $data = is_callable($data) ? $data($config->get($key)) : $data;
+            $config->set($key, $data);
         });
     }
 
