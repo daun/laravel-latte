@@ -25,3 +25,11 @@ test('switches between locales', function () {
     $this->latte("{_'messages.welcome', [name: 'Mary']}")->assertSee('Welcome, Mary');
     $this->latte("{_'messages.welcome', [name: 'Marie'], 'de'}")->assertSee('Willkommen, Marie');
 });
+
+test('throws for invalid translator', function () {
+    $this->modifyConfig('latte.translator', 5);
+    $this->bootServiceProvider();
+
+    expect(fn() => $this->app->get('latte.engine'))
+        ->toThrow(\Exception::class, 'Invalid translator extension: must be class name or null.');
+});

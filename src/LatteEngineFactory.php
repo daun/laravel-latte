@@ -84,14 +84,12 @@ class LatteEngineFactory
     protected function getTranslatorExtension(): ?Extension
     {
         $translator = $this->config->get('latte.translator');
-        if (empty($translator)) {
+        if ($translator === null) {
             return null;
         } elseif (is_string($translator)) {
             return new $translator();
-        } elseif (is_callable($translator)) {
-            return $translator();
         } else {
-            return new LaravelTranslatorExtension();
+            throw new \Exception('Invalid translator extension: must be class name or null.');
         }
     }
 }
