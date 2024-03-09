@@ -53,7 +53,8 @@
         "lint": "./vendor/bin/pint --test",
         "analyse": "./vendor/bin/phpstan analyse --memory-limit=2G",
         "test": "./vendor/bin/pest",
-        "test:coverage": "./vendor/bin/pest --coverage-clover clover.xml"
+        "test:coverage": "./vendor/bin/pest --coverage",
+        "test:ci": "./vendor/bin/pest --coverage-clover coverage.xml"
     },
     "config": {
         "allow-plugins": {

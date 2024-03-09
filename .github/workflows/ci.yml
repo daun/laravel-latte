@@ -21,7 +21,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -34,34 +34,37 @@ jobs:
         run: echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
 
       - name: Select Laravel 9
-        uses: nick-invision/retry@v1
+        uses: nick-invision/retry@v3
         with:
-          timeout_minutes: 5
-          max_attempts: 5
+          timeout_minutes: 3
+          max_attempts: 3
           command: composer require "laravel/framework:9.*" "orchestra/testbench:^7.40" --no-update --no-interaction
         if: "matrix.laravel == '9'"
 
       - name: Select Laravel 10
-        uses: nick-invision/retry@v1
+        uses: nick-invision/retry@v3
         with:
-          timeout_minutes: 5
-          max_attempts: 5
+          timeout_minutes: 3
+          max_attempts: 3
           command: composer require "laravel/framework:10.*" "orchestra/testbench:^8.21" --no-update --no-interaction
         if: "matrix.laravel == '10'"
 
       - name: Install PHP Dependencies
-        uses: nick-invision/retry@v1
+        uses: nick-invision/retry@v3
         with:
-          timeout_minutes: 5
-          max_attempts: 5
+          timeout_minutes: 3
+          max_attempts: 3
           command: composer update --no-interaction --no-progress
 
-      - name: Execute tests
-        run: composer run test:coverage
+      - name: Check code style
+        run: composer run lint
 
-      # - name: Execute code style checks
-      #   run: ./vendor/bin/phpcs --standard=PSR2 -p --ignore=./tests/storage/* --report=full --report-checkstyle=build/logs/checkstyle.xml src/ tests/
+      - name: Execute tests
+        run: composer run test:ci
 
       - name: Check code coverage
         if: ${{ matrix.php == '8.3' }}
-        uses: codecov/codecov-action@v2.1.0
+        uses: codecov/codecov-action@v4
+        with:
+          file: ./coverage.xml
+          token: ${{ secrets.CODECOV_TOKEN }}
