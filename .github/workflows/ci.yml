@@ -38,7 +38,7 @@ jobs:
         with:
           timeout_minutes: 5
           max_attempts: 5
-          command: composer require "laravel/framework:9.*" "pestphp/pest:^2.3.4" --no-update --no-interaction
+          command: composer require "laravel/framework:9.*" "orchestra/testbench:^7.40" --no-update --no-interaction
         if: "matrix.laravel == '9'"
 
       - name: Select Laravel 10
@@ -46,7 +46,7 @@ jobs:
         with:
           timeout_minutes: 5
           max_attempts: 5
-          command: composer require "laravel/framework:10.*" "pestphp/pest:^2.3.4" --no-update --no-interaction
+          command: composer require "laravel/framework:10.*" "orchestra/testbench:^8.21" --no-update --no-interaction
         if: "matrix.laravel == '10'"
 
       - name: Install PHP Dependencies
