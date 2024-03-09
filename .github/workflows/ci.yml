@@ -1,0 +1,67 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: true
+      matrix:
+        php: [ '8.0', '8.1', '8.2', '8.3' ]
+        laravel: [ '9', '10' ]
+        exclude:
+          - php: '8.0'
+            laravel: '10'
+
+    name: PHP ${{ matrix.php }}; Laravel ${{ matrix.laravel }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          tools: composer:v2
+          coverage: xdebug
+
+      - name: Setup Problem Matchers
+        run: echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
+
+      - name: Select Laravel 9
+        uses: nick-invision/retry@v1
+        with:
+          timeout_minutes: 5
+          max_attempts: 5
+          command: composer require "laravel/framework:9.*" "phpunit/phpunit:^9.3.7" --no-update --no-interaction
+        if: "matrix.laravel == '9'"
+
+      - name: Select Laravel 10
+        uses: nick-invision/retry@v1
+        with:
+          timeout_minutes: 5
+          max_attempts: 5
+          command: composer require "laravel/framework:10.*" "phpunit/phpunit:^9.3.7" --no-update --no-interaction
+        if: "matrix.laravel == '10'"
+
+      - name: Install PHP Dependencies
+        uses: nick-invision/retry@v1
+        with:
+          timeout_minutes: 5
+          max_attempts: 5
+          command: composer update --no-interaction --no-progress
+
+      - name: Execute tests
+        run: composer run test:coverage
+
+      # - name: Execute code style checks
+      #   run: ./vendor/bin/phpcs --standard=PSR2 -p --ignore=./tests/storage/* --report=full --report-checkstyle=build/logs/checkstyle.xml src/ tests/
+
+      - name: Check code coverage
+        if: ${{ matrix.php == '8.3' }}
+        uses: codecov/codecov-action@v2.1.0
