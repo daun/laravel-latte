@@ -5,28 +5,27 @@ namespace Tests;
 use Daun\LaravelLatte\ServiceProvider;
 use Illuminate\Config\Repository;
 use Illuminate\Foundation\Application;
-use Illuminate\Foundation\Testing\Concerns\InteractsWithViews;
-use Mockery;
+use Illuminate\Foundation\Testing\TestCase as LaravelTestCase;
 use Orchestra\Testbench\Concerns\CreatesApplication;
-use PHPUnit\Framework\TestCase as BaseTestCase;
 use Tests\Concerns\InteractsWithLatteViews;
 
-abstract class TestCase extends BaseTestCase
+abstract class TestCase extends LaravelTestCase
 {
     use CreatesApplication;
-    use InteractsWithViews;
     use InteractsWithLatteViews;
 
-    protected $root;
+    protected $provider;
 
     protected function setUp(): void
     {
-        $this->root = realpath(__DIR__ . '/../src');
+        parent::setUp();
+
+        $this->createServiceProvider();
     }
 
     protected function tearDown(): void
     {
-        Mockery::close();
+        parent::tearDown();
     }
 
     protected function defineEnvironment(Application $app)
@@ -40,24 +39,25 @@ abstract class TestCase extends BaseTestCase
         });
     }
 
-    public function modifyConfig(Application $app, string $key, mixed $data)
+    public function modifyConfig(string $key, mixed $data)
     {
-        tap($app['config'], function (Repository $config) use ($key, $data) {
+        tap($this->app['config'], function (Repository $config) use ($key, $data) {
             $data = is_callable($data) ? $data($config->get($key)) : $data;
             $config->set($key, $data);
         });
     }
 
-    protected function createServiceProvider(Application $app): ServiceProvider
+    protected function createServiceProvider()
     {
-        return new ServiceProvider($app);
+        $this->provider = new ServiceProvider($this->app);
     }
 
-    protected function createAndBootServiceProvider(Application $app): ServiceProvider
+    protected function bootServiceProvider()
     {
-        $provider = new ServiceProvider($app);
-        $provider->register();
-        $provider->boot();
-        return $provider;
+        if (! $this->provider) {
+            $this->createServiceProvider();
+        }
+        $this->provider->register();
+        $this->provider->boot();
     }
 }

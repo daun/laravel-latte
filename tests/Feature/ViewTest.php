@@ -1,15 +1,13 @@
 <?php
 
 test('renders views', function () {
-    $app = $this->createApplication();
-    $this->createAndBootServiceProvider($app);
+    $this->bootServiceProvider();
 
     $this->view('welcome')->assertSee('Welcome to Laravel Latte');
 });
 
 test('passes data into view', function () {
-    $app = $this->createApplication();
-    $this->createAndBootServiceProvider($app);
+    $this->bootServiceProvider();
 
     $this->view('data.data', [
         'name' => 'John',

@@ -1,8 +1,7 @@
 <?php
 
 test('resolves layout', function () {
-    $app = $this->createApplication();
-    $this->createAndBootServiceProvider($app);
+    $this->bootServiceProvider();
 
     $this->view('layout.view-with-layout')
         ->assertSee('Layout Parent')
@@ -10,8 +9,7 @@ test('resolves layout', function () {
 });
 
 test('resolves without layout', function () {
-    $app = $this->createApplication();
-    $this->createAndBootServiceProvider($app);
+    $this->bootServiceProvider();
 
     $this->view('layout.view-without-layout')
         ->assertDontSee('Layout Parent')
@@ -19,9 +17,8 @@ test('resolves without layout', function () {
 });
 
 test('provides default layout', function () {
-    $app = $this->createApplication();
-    $this->modifyConfig($app, 'latte.default_layout', 'layout.default-layout');
-    $this->createAndBootServiceProvider($app);
+    $this->modifyConfig('latte.default_layout', 'layout.default-layout');
+    $this->bootServiceProvider();
 
     $this->view('layout.view-without-layout')
         ->assertDontSee('Layout Parent')
@@ -30,9 +27,8 @@ test('provides default layout', function () {
 });
 
 test('does not override set layout', function () {
-    $app = $this->createApplication();
-    $this->modifyConfig($app, 'latte.default_layout', 'layout.default-layout');
-    $this->createAndBootServiceProvider($app);
+    $this->modifyConfig('latte.default_layout', 'layout.default-layout');
+    $this->bootServiceProvider();
 
     $this->view('layout.view-with-layout')
         ->assertSee('Layout Parent')
