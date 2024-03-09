@@ -10,5 +10,5 @@
 
 * Initial release
 
-[1.1.0]: https://github.com/daun/statamic-widget-collection-count/releases/tag/v1.1.0
-[1.0.0]: https://github.com/daun/statamic-widget-collection-count/releases/tag/v1.0.0
+[1.1.0]: https://github.com/daun/laravel-latte/releases/tag/1.1.0
+[1.0.0]: https://github.com/daun/laravel-latte/releases/tag/1.0.0
