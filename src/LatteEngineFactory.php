@@ -20,7 +20,7 @@ final class LatteEngineFactory
 
     public static function make(Loader $loader, Repository $config): Engine
     {
-        $factory = new static($loader, $config);
+        $factory = new self($loader, $config);
 
         return $factory->create();
     }
