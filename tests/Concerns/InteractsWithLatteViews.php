@@ -3,14 +3,11 @@
 namespace Tests\Concerns;
 
 use Illuminate\Contracts\Support\Arrayable;
-use Illuminate\Foundation\Testing\Concerns\InteractsWithViews as OriginalInteractsWithViews;
 use Illuminate\Support\Facades\View as ViewFacade;
 use Illuminate\Testing\TestView;
 
-trait InteractsWithViews
+trait InteractsWithLatteViews
 {
-    use OriginalInteractsWithViews;
-
     /**
      * Render the contents of the given Latte template string.
      */
