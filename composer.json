@@ -8,6 +8,12 @@
             "Daun\\LaravelLatte\\": "src"
         }
     },
+    "autoload-dev": {
+      "psr-4": {
+        "Tests\\": "tests/",
+        "TestExtensions\\": "tests/fixtures/extensions/"
+      }
+    },
     "license": "MIT",
     "authors": [
         {
@@ -33,5 +39,24 @@
         "php": "^8.0",
         "latte/latte": "^3.0",
         "laravel/framework": "^9.0 || ^10.0"
+    },
+    "require-dev": {
+        "larastan/larastan": "^2.9",
+        "laravel/pint": "^1.14",
+        "orchestra/testbench": "^8.21",
+        "mockery/mockery": "^1.6",
+        "pestphp/pest": "^2.34",
+        "pestphp/pest-plugin-laravel": "^2.3"
+    },
+    "scripts": {
+        "format": "./vendor/bin/pint",
+        "lint": "./vendor/bin/pint --test",
+        "analyse": "./vendor/bin/phpstan analyse --memory-limit=2G",
+        "test": "./vendor/bin/pest"
+    },
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
     }
 }

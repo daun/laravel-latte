@@ -6,6 +6,7 @@ use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Str;
 use Illuminate\View\Factory;
 use Illuminate\View\FileViewFinder;
+use Illuminate\View\ViewFinderInterface;
 use Illuminate\View\ViewName;
 use Latte\Loader;
 
@@ -13,16 +14,22 @@ class LatteFileLoader implements Loader
 {
     public function __construct(
         protected Factory $view
-    ) {}
+    ) {
+    }
 
-    public function finder(): FileViewFinder
+    public function finder(): ViewFinderInterface
     {
         return $this->view->getFinder();
     }
 
     public function filesystem(): Filesystem
     {
-        return $this->finder()->getFilesystem();
+        $finder = $this->finder();
+        if ($finder instanceof FileViewFinder) {
+            return $finder->getFilesystem();
+        } else {
+            throw new \RuntimeException('Latte requires a file-based view finder.');
+        }
     }
 
     public function getContent(string $name): string
@@ -35,7 +42,7 @@ class LatteFileLoader implements Loader
 
         if ($this->isExpired($path, time())) {
             if (@touch($path) === false) {
-                trigger_error("File's modification time is in the future. Cannot update it: " . error_get_last()['message'], E_USER_WARNING);
+                trigger_error("File's modification time is in the future. Cannot update it: ".error_get_last()['message'], E_USER_WARNING);
             }
         }
 
@@ -46,6 +53,7 @@ class LatteFileLoader implements Loader
     {
         try {
             $mtime = $this->filesystem()->lastModified($path);
+
             return $mtime > $time;
         } catch (\Throwable $th) {
             return true;
@@ -76,7 +84,7 @@ class LatteFileLoader implements Loader
         return Str::startsWith($str, ['/', '../', './']);
     }
 
-    protected function fileExists(string $name): string
+    protected function fileExists(string $name): bool
     {
         return $this->filesystem()->exists($name);
     }
@@ -89,6 +97,7 @@ class LatteFileLoader implements Loader
     protected function findViewPath(string $name): string
     {
         $name = $this->normalizeViewName($name);
+
         return $this->finder()->find($name);
     }
 
@@ -107,6 +116,7 @@ class LatteFileLoader implements Loader
                 $res[] = $part;
             }
         }
+
         return implode(DIRECTORY_SEPARATOR, $res);
     }
 }

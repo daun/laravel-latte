@@ -4,6 +4,7 @@ namespace Daun\LaravelLatte\Extensions;
 
 use Latte\Essential\TranslatorExtension;
 use Latte\Extension;
+use Latte\Runtime\FilterInfo;
 
 /**
  * Latte extension for using Laravel's translation stores.
@@ -15,7 +16,6 @@ use Latte\Extension;
  * {(trans_key|translate:$lang)}           or    {_'trans_key', $lang}
  * {(trans_key|translate:[some => data])}  or    {_'trans_key', [some => data]}
  */
-
 class LaravelTranslatorExtension extends Extension
 {
     protected TranslatorExtension $translator;
@@ -25,7 +25,8 @@ class LaravelTranslatorExtension extends Extension
         $this->translator = new TranslatorExtension([$this, 'translate']);
     }
 
-    public function translate($key, $replace = [], $locale = null) {
+    public function translate(?string $key, string|array $replace = [], ?string $locale = null): string|array|null
+    {
         if (is_string($replace) && ! $locale) {
             $locale = $replace;
             $replace = [];
@@ -34,17 +35,23 @@ class LaravelTranslatorExtension extends Extension
         return trans($key, $replace, $locale);
     }
 
-    public function translateChoice($key, $count, $replace = [], $locale = null) {
-        return trans_choice($key, $count, $replace, $locale);
+    public function translateChoice(string $key, \Countable|int|float|array $number, string|array $replace = [], ?string $locale = null): string
+    {
+        if (is_string($replace) && ! $locale) {
+            $locale = $replace;
+            $replace = [];
+        }
+
+        return trans_choice($key, $number, $replace, $locale);
     }
 
     public function getFilters(): array
     {
         return [
             ...$this->translator->getFilters(),
-            'translate' => fn(...$args) => $this->translate(...$args),
-            'trans' => fn(...$args) => $this->translate(...$args),
-            'transChoice' => fn(...$args) => $this->translateChoice(...$args),
+            'translate' => fn (...$args) => $this->translate(...$this->prepareArguments($args)),
+            'trans' => fn (...$args) => $this->translate(...$this->prepareArguments($args)),
+            'transChoice' => fn (...$args) => $this->translateChoice(...$this->prepareArguments($args)),
         ];
     }
 
@@ -53,8 +60,28 @@ class LaravelTranslatorExtension extends Extension
         return $this->translator->getTags();
     }
 
-    public static function toValue($args): mixed
+    public static function toValue(mixed $args): mixed
     {
         return TranslatorExtension::toValue($args);
+    }
+
+    public static function prepareArguments(mixed $args): array
+    {
+        $namedArgs = [];
+        $namedArgsPosition = 0;
+        $i = 0;
+        foreach ($args as $key => $value) {
+            if (is_string($key)) {
+                $namedArgsPosition = $i;
+                $namedArgs[$key] = $value;
+                unset($args[$key]);
+            }
+            $i++;
+        }
+        if (count($namedArgs)) {
+            $args = array_values($args);
+            array_splice($args, $namedArgsPosition, 0, [$namedArgs]);
+        }
+        return $args;
     }
 }

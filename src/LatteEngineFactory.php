@@ -5,7 +5,9 @@ namespace Daun\LaravelLatte;
 use Daun\LaravelLatte\Events\LatteEngineCreated;
 use Daun\LaravelLatte\Extensions\LaravelTranslatorExtension;
 use Illuminate\Contracts\Config\Repository;
+use Illuminate\Support\Collection;
 use Latte\Engine;
+use Latte\Extension;
 use Latte\Loader;
 use Latte\Runtime\Template;
 
@@ -14,7 +16,14 @@ class LatteEngineFactory
     public function __construct(
         protected Loader $loader,
         protected Repository $config
-    ) {}
+    ) {
+    }
+
+    public static function make(Loader $loader, Repository $config): Engine
+    {
+        $factory = new static($loader, $config);
+        return $factory->create();
+    }
 
     public function create(): Engine
     {
@@ -28,13 +37,17 @@ class LatteEngineFactory
         }
 
         foreach ($this->getUserExtensions() as $extension) {
-            $latte->addExtension(new $extension());
+            $latte->addExtension($extension);
         }
 
         if ($layout = $this->getDefaultLayout()) {
-            $latte->addProvider('defaultLayout', fn() => $layout);
+            $latte->addProvider('defaultLayout', fn () => $layout);
             $latte->addProvider('coreParentFinder', function (Template $template) {
-                if ($template->getReferenceType()) return; // ignore includes/embeds
+                // ignore includes/embeds
+                if ($template->getReferenceType()) {
+                    return;
+                }
+
                 return ($template->global->defaultLayout)($template);
             });
         }
@@ -45,29 +58,35 @@ class LatteEngineFactory
         return $latte;
     }
 
-    protected function isDebug() {
-        return $this->config->get('app.debug');
+    protected function isDebug(): bool
+    {
+        return (bool) $this->config->get('app.debug');
     }
 
-    protected function getCacheDirectory() {
-        return $this->config->get('latte.compiled') ?: $this->config->get('view.compiled');
+    protected function getCacheDirectory(): ?string
+    {
+        return $this->config->get('latte.compiled') ?: $this->config->get('view.compiled') ?: null;
     }
 
-    protected function getDefaultLayout() {
+    protected function getDefaultLayout(): ?string
+    {
         return $this->config->get('latte.default_layout');
     }
 
-    protected function getUserExtensions() {
-        return $this->config->get('latte.extensions', []);
+    protected function getUserExtensions(): Collection
+    {
+        $extensions = $this->config->get('latte.extensions', []);
+        return collect($extensions)->map(fn ($class) => new $class());
     }
 
-    protected function getTranslatorExtension() {
+    protected function getTranslatorExtension(): ?Extension
+    {
         $translator = $this->config->get('latte.translator');
         if (empty($translator)) {
             return null;
-        } else if (is_string($translator)) {
+        } elseif (is_string($translator)) {
             return new $translator();
-        } else if (is_callable($translator)) {
+        } elseif (is_callable($translator)) {
             return $translator();
         } else {
             return new LaravelTranslatorExtension();

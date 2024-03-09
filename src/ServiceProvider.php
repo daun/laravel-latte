@@ -12,6 +12,7 @@ class ServiceProvider extends BaseServiceProvider
         return [
             'latte.engine',
             'latte.loader',
+            'latte.bridge',
         ];
     }
 
@@ -25,12 +26,12 @@ class ServiceProvider extends BaseServiceProvider
     public function boot()
     {
         $this->loadConfiguration();
-        $this->registerViewExtensions();
+        $this->addViewExtensions();
     }
 
     protected function loadConfiguration()
     {
-        $configPath = __DIR__ . '/../config/latte.php';
+        $configPath = __DIR__.'/../config/latte.php';
         $this->publishes([$configPath => config_path('latte.php')], 'config');
         $this->mergeConfigFrom($configPath, 'latte');
     }
@@ -45,7 +46,7 @@ class ServiceProvider extends BaseServiceProvider
     protected function registerLatteInstance(): void
     {
         $this->app->singleton('latte.engine', function (Application $app) {
-            return (new LatteEngineFactory($app['latte.loader'], $app['config']))->create();
+            return LatteEngineFactory::make($app['latte.loader'], $app['config']);
         });
     }
 
@@ -56,14 +57,15 @@ class ServiceProvider extends BaseServiceProvider
         });
 
         $this->app->extend('view.engine.resolver', function ($resolver) {
-            $resolver->register('latte', fn() => $this->app['latte.bridge']);
+            $resolver->register('latte', fn () => $this->app['latte.bridge']);
+
             return $resolver;
         });
     }
 
-    protected function registerViewExtensions()
+    protected function addViewExtensions()
     {
-        $extensions = $this->app->config->get('latte.file_extensions', []);
+        $extensions = $this->app['config']->get('latte.file_extensions', []);
         foreach ($extensions as $extension) {
             $this->app['view']->addExtension($extension, 'latte');
         }
