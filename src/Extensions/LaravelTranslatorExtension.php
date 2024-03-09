@@ -4,6 +4,7 @@ namespace Daun\LaravelLatte\Extensions;
 
 use Latte\Essential\TranslatorExtension;
 use Latte\Extension;
+use Latte\Runtime\FilterInfo;
 
 /**
  * Latte extension for using Laravel's translation stores.
@@ -48,9 +49,9 @@ class LaravelTranslatorExtension extends Extension
     {
         return [
             ...$this->translator->getFilters(),
-            'translate' => fn (...$args) => $this->translate(...$args),
-            'trans' => fn (...$args) => $this->translate(...$args),
-            'transChoice' => fn (...$args) => $this->translateChoice(...$args),
+            'translate' => fn (...$args) => $this->translate(...$this->prepareArguments($args)),
+            'trans' => fn (...$args) => $this->translate(...$this->prepareArguments($args)),
+            'transChoice' => fn (...$args) => $this->translateChoice(...$this->prepareArguments($args)),
         ];
     }
 
@@ -62,5 +63,25 @@ class LaravelTranslatorExtension extends Extension
     public static function toValue(mixed $args): mixed
     {
         return TranslatorExtension::toValue($args);
+    }
+
+    public static function prepareArguments(mixed $args): array
+    {
+        $namedArgs = [];
+        $namedArgsPosition = 0;
+        $i = 0;
+        foreach ($args as $key => $value) {
+            if (is_string($key)) {
+                $namedArgsPosition = $i;
+                $namedArgs[$key] = $value;
+                unset($args[$key]);
+            }
+            $i++;
+        }
+        if (count($namedArgs)) {
+            $args = array_values($args);
+            array_splice($args, $namedArgsPosition, 0, [$namedArgs]);
+        }
+        return $args;
     }
 }

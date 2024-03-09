@@ -48,8 +48,6 @@ test('resolves view engine bridge', function () {
     $app = $this->createApplication();
     $this->createAndBootServiceProvider($app);
 
-    ray($app['view']->getEngineResolver());
-
     $engine = $app['view']->getEngineResolver()->resolve('latte');
     expect($engine)->toBeInstanceOf(ViewEngineBridge::class);
 });

@@ -31,8 +31,9 @@ abstract class TestCase extends BaseTestCase
 
     protected function defineEnvironment(Application $app)
     {
-        $defaults = include __DIR__ . '/../config/latte.php';
+        $app['path.lang'] = __DIR__.'/fixtures/lang';
 
+        $defaults = include __DIR__ . '/../config/latte.php';
         tap($app['config'], function (Repository $config) use ($defaults) {
             $config->set('latte', $defaults);
             $config->set('view.paths', [__DIR__.'/fixtures/views']);
@@ -58,10 +59,5 @@ abstract class TestCase extends BaseTestCase
         $provider->register();
         $provider->boot();
         return $provider;
-    }
-
-    protected function addViewPaths(Application $app): void
-    {
-        $app['config']->set('view.paths', [__DIR__]);
     }
 }
