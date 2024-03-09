@@ -11,7 +11,7 @@ test('prefers standard file extension', function () {
     $this->bootServiceProvider();
 
     // should load view[.latte] instead of view[.latte.html]
-    $this->view('extensions.view')->assertSee('[.latte]');
+    $this->view('files.view')->assertSee('[.latte]');
 });
 
 test('allows custom file extension', function () {
@@ -19,5 +19,5 @@ test('allows custom file extension', function () {
     $this->bootServiceProvider();
 
     // should load view[.latte.custom]
-    $this->view('extensions.view')->assertSee('[.latte.custom]');
+    $this->view('files.view')->assertSee('[.latte.custom]');
 });

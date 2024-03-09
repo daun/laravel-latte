@@ -10,7 +10,8 @@
     },
     "autoload-dev": {
       "psr-4": {
-        "Tests\\": "tests/"
+        "Tests\\": "tests/",
+        "TestExtensions\\": "tests/fixtures/extensions/"
       }
     },
     "license": "MIT",
