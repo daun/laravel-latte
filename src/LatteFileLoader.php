@@ -46,23 +46,13 @@ class LatteFileLoader implements Loader
             return $this->getFile($name);
         }
 
-        $path = $this->resolve($name, null);
-
-        if ($this->isExpired($path, time())) {
-            if (@touch($path) === false) {
-                trigger_error("File's modification time is in the future. Cannot update it: ".error_get_last()['message'], E_USER_WARNING);
-            }
-        }
-
-        return $this->getFile($path);
+        return $this->getFile($this->resolve($name));
     }
 
     public function isExpired(string $path, int $time): bool
     {
         try {
-            $mtime = $this->filesystem()->lastModified($path);
-
-            return $mtime > $time;
+            return $this->filesystem()->lastModified($path) > $time;
         } catch (\Throwable $th) {
             return true;
         }
@@ -78,7 +68,7 @@ class LatteFileLoader implements Loader
         return strtr($name, '/', DIRECTORY_SEPARATOR);
     }
 
-    protected function resolve(string $name, ?string $context): string
+    protected function resolve(string $name, ?string $context = null): string
     {
         if ($this->looksLikePath($name)) {
             return $this->normalizePath($context ? "{$context}/../{$name}" : $name);
