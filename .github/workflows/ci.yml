@@ -17,7 +17,7 @@ jobs:
         #   - php: '8.0'
         #     laravel: '10'
 
-    name: PHP ${{ matrix.php }}; Laravel ${{ matrix.laravel }}
+    name: PHP ${{ matrix.php }} / Laravel ${{ matrix.laravel }}
 
     steps:
       - name: Checkout code
@@ -35,19 +35,19 @@ jobs:
 
       - name: Select Laravel 9
         uses: nick-invision/retry@v3
+        if: ${{ matrix.laravel == '9' }}
         with:
           timeout_minutes: 3
           max_attempts: 3
           command: composer require "laravel/framework:9.*" "orchestra/testbench:^7.40" "pestphp/pest:^1.22" "pestphp/pest-plugin-laravel:^1.4" --no-update --no-interaction
-        if: "matrix.laravel == '9'"
 
       - name: Select Laravel 10
         uses: nick-invision/retry@v3
+        if: ${{ matrix.laravel == '10' }}
         with:
           timeout_minutes: 3
           max_attempts: 3
           command: composer require "laravel/framework:10.*" "orchestra/testbench:^8.21" "pestphp/pest:^2.34" "pestphp/pest-plugin-laravel:^2.3" --no-update --no-interaction
-        if: "matrix.laravel == '10'"
 
       - name: Install PHP Dependencies
         uses: nick-invision/retry@v3
@@ -63,8 +63,8 @@ jobs:
         run: composer run test:ci
 
       - name: Check code coverage
-        if: ${{ matrix.php == '8.3' }}
         uses: codecov/codecov-action@v4
+        if: ${{ matrix.php == '8.3' && matrix.laravel == '10' }}
         with:
           file: ./coverage.xml
           token: ${{ secrets.CODECOV_TOKEN }}
