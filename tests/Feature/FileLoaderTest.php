@@ -11,3 +11,9 @@ test('resolves files from subfolders', function () {
 
     $this->view('loader.nested.include')->assertSee('Welcome to Laravel Latte');
 });
+
+test('resolves relative paths', function () {
+    $this->bootServiceProvider();
+
+    $this->view('loader.relative')->assertSee('Welcome to Laravel Latte');
+});

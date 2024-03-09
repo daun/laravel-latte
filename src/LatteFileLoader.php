@@ -32,13 +32,21 @@ class LatteFileLoader implements Loader
         }
     }
 
+    public function extensions(): array
+    {
+        return collect($this->view->getExtensions())
+            ->filter(fn ($engine) => $engine === 'latte')
+            ->keys()
+            ->all();
+    }
+
     public function getContent(string $name): string
     {
         if ($this->fileExists($name)) {
             return $this->getFile($name);
         }
 
-        $path = $this->findViewPath($name);
+        $path = $this->resolve($name, null);
 
         if ($this->isExpired($path, time())) {
             if (@touch($path) === false) {
@@ -117,6 +125,18 @@ class LatteFileLoader implements Loader
             }
         }
 
-        return implode(DIRECTORY_SEPARATOR, $res);
+        $path = implode(DIRECTORY_SEPARATOR, $res);
+
+        if ($this->fileExists($path)) {
+            return $path;
+        } else {
+            foreach ($this->extensions() as $extension) {
+                if ($this->fileExists($path.'.'.$extension)) {
+                    return $path.'.'.$extension;
+                }
+            }
+        }
+
+        return $path;
     }
 }
