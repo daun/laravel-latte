@@ -117,9 +117,7 @@ class LatteFileLoader implements Loader
 
         $path = implode(DIRECTORY_SEPARATOR, $res);
 
-        if ($this->fileExists($path)) {
-            return $path;
-        } else {
+        if (! $this->fileExists($path)) {
             foreach ($this->extensions() as $extension) {
                 if ($this->fileExists("{$path}.{$extension}")) {
                     return "{$path}.{$extension}";

@@ -16,4 +16,5 @@ test('resolves relative paths', function () {
     $this->bootServiceProvider();
 
     $this->view('loader.relative')->assertSee('Welcome to Laravel Latte');
+    $this->view('loader.relative-extension')->assertSee('Welcome to Laravel Latte');
 });
