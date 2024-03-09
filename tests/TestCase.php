@@ -4,18 +4,16 @@ namespace Tests;
 
 use Daun\LaravelLatte\ServiceProvider;
 use Illuminate\Config\Repository;
-use Illuminate\Events\Dispatcher;
-use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\Application;
-use Illuminate\View\Engines\EngineResolver;
-use Illuminate\View\Factory;
 use Mockery;
 use Orchestra\Testbench\Concerns\CreatesApplication;
 use PHPUnit\Framework\TestCase as BaseTestCase;
+use Tests\Concerns\InteractsWithViews;
 
 abstract class TestCase extends BaseTestCase
 {
     use CreatesApplication;
+    use InteractsWithViews;
 
     protected $root;
 
@@ -29,33 +27,12 @@ abstract class TestCase extends BaseTestCase
         Mockery::close();
     }
 
-    /**
-     * @param array $customConfig that will override the default config.
-     * @return Application
-     */
-    protected function getApplication(array $config = []): Application
+    protected function defineEnvironment(Application $app)
     {
-        $app = new Application(__DIR__);
-
-        $app['env'] = 'production';
-        $app['path.config'] = __DIR__ . '/config';
-        $app['path.storage'] = __DIR__ . '/storage';
-
-        // Filesystem
-        $files = Mockery::mock(Filesystem::class);
-        $app['files'] = $files;
-
-        // View
-        $finder = Mockery::mock('Illuminate\View\ViewFinderInterface');
-        $finder->shouldReceive('addExtension');
-        $app['view'] = new Factory(new EngineResolver, $finder, Mockery::mock(Dispatcher::class));
-
-        // Config
-        $defaults = include $this->root . '/../config/latte.php';
-        $app['config'] = new Repository($config + $defaults);
-        $app->bind('Illuminate\Config\Repository', fn () => $app['config']);
-
-        return $app;
+        tap($app['config'], function (Repository $config) {
+            $defaults = include __DIR__ . '/../config/latte.php';
+            $config->set('latte', $defaults);
+        });
     }
 
     protected function createServiceProvider(Application $app): ServiceProvider
@@ -69,5 +46,10 @@ abstract class TestCase extends BaseTestCase
         $provider->register();
         $provider->boot();
         return $provider;
+    }
+
+    protected function addViewPaths(Application $app): void
+    {
+        $app['config']->set('view.paths', [__DIR__]);
     }
 }
