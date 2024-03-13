@@ -13,7 +13,7 @@ test('creates correct facade instance', function () {
 test('provides filters from facade', function () {
     $this->bootServiceProvider();
 
-    Latte::addFilter('plural', fn($str) => Str::plural($str));
+    Latte::addFilter('plural', fn ($str) => Str::plural($str));
 
     $this->latte('{$word|plural}', ['word' => 'car'])->assertSee('cars');
 });
