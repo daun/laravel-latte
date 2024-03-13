@@ -38,7 +38,7 @@
     "require": {
         "php": "^8.1",
         "latte/latte": "^3.0",
-        "laravel/framework": "^9.0 || ^10.0"
+        "laravel/framework": "^9.0 || ^10.0 || ^11.0"
     },
     "require-dev": {
         "larastan/larastan": "^2.9",
