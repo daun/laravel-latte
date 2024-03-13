@@ -5,9 +5,15 @@
 [![Code Coverage](https://img.shields.io/codecov/c/github/daun/laravel-latte)](https://app.codecov.io/gh/daun/laravel-latte)
 [![License](https://img.shields.io/github/license/daun/laravel-latte.svg)](https://github.com/daun/laravel-latte/blob/master/LICENSE)
 
-Add support for the [Latte](https://latte.nette.org) templating engine in [Laravel](https://laravel.com)
-views. Allows extensive customization, adds a translator bridge to use Laravel translations and
-allows Blade-style dot syntax when including partials.
+Add support for the [Latte](https://latte.nette.org) templating engine in [Laravel](https://laravel.com) views.
+
+## Features
+
+- Render `.latte` views
+- Latte engine configurable via facade
+- Translation provider to access localized messages
+- Laravel-style path resolution when including partials
+- Extensive test coverage
 
 ## Installation
 
@@ -18,7 +24,7 @@ composer require daun/laravel-latte
 ## Requirements
 
 - PHP 8.1+
-- Laravel 9+
+- Laravel 9/10/11
 
 ## Usage
 
@@ -27,7 +33,9 @@ You can now render Latte files like you would any other view. The example below 
 view at `resources/views/home.latte` using Latte.
 
 ```php
-Route::get('/', fn() => view('home'));
+Route::get('/', function() {
+    return view('home');
+});
 ```
 
 ## Configuration
@@ -39,54 +47,85 @@ customize the default config file:
 php artisan vendor:publish --provider="Daun\LaravelLatte\ServiceProvider"
 ```
 
-## Including partials
+## Localization
 
-The package includes a custom loader that allows including partials from subdirectories using
-Blade's dot notation to specify folders:
+The package includes a custom translator extension that acts as a bridge to Laravel's translation
+service. It allows using any translations registered in your app to be used in Latte views, using
+either the `_` tag or the `translate` filter:
 
 ```latte
-{* Will include /resources/views/partials/slideshow/image.latte *}
+{_'messages.welcome'}
+{('messages.welcome'|translate)}
+```
+
+You can pass in parameters as usual:
+
+```latte
+{_'messages.welcome', [name: 'Adam']}
+{('messages.welcome'|translate:[name: 'Adam'])}
+```
+
+Translate using a custom locale by passing it after or in place of the params:
+
+```latte
+{_'messages.welcome', [name: 'Mary'], 'fr'}
+{_'messages.welcome', 'fr'}
+```
+
+Pluralization works using the `transChoice` filter.
+
+```latte
+{('messages.apples'|transChoice:5)}
+```
+
+## Path resolution
+
+The package includes a custom loader that allows including partials from subdirectories using
+Laravel's dot notation to specify folders.
+
+```latte
+{* resolves to /resources/views/partials/slideshow/image.latte *}
 
 {include 'partials.slideshow.image'}
 ```
 
-## Translations
-
-The package includes a custom translator extension that acts as a bridge to Laravel's translation
-service and allows using any translations registered in your app to be used.
+To specifically include files relative to the current file, prefix the path with `./` or `../`:
 
 ```latte
-{* Display a translation from /lang/en/messages.php *}
-
-{_'messages.welcome'}
+{include './image.latte'}
 ```
 
-## Default layout file
+## Default layout
 
-If you require a common layout file for all views, you can define a default layout file.
+If you require a common layout file for all views, you can define a default layout in
+`config/latte.php`. Any views without a specifically set layout will now be merged into that layout.
 
 ```php
-// Use /resources/views/layouts/default.latte as layout for all views
-'default_layout' => 'layouts.default'
+[
+    // /resources/views/layouts/default.latte
+    'default_layout' => 'layouts.default'
+]
 ```
 
-## Extending Latte
+## Configuring Latte
 
 ### Extensions
 
 To extend Latte and add your own tags, filters and functions, you can use the `extensions` array
-in `config/latte.php` to supply a list of Latte extension to register automatically:
+in `config/latte.php` to supply a list of Latte extensions to register automatically.
 
 ```php
-'extensions' => [
-    \App\View\Latte\MyExtension::class
+[
+    'extensions' => [
+        \App\View\Latte\MyExtension::class
+    ]
 ]
 ```
 
 ### Facade
 
-Using the `Latte` facade, you can configure the Latte engine instance yourself.
-Modify its config, add custom tags, filters, etc.
+You can also directly access and configure the Latte engine instance from the `Latte` facade.
+Modify its config, add custom filters, etc.
 
 ```php
 use Daun\LaravelLatte\Facades\Latte;
@@ -96,14 +135,15 @@ class AppServiceProvider extends ServiceProvider
 {
     public function boot()
     {
-        Latte::addExtension(new MyCustomLatteExtension());
+        Latte::addFilter('plural', fn($str) => Str::plural($str));
     }
 }
 ```
 
 ### Events
 
-Listen for a `LatteEngineCreated` event to customize the returned Latte instance:
+If you need to be notified when the Latte engine is created, listen for the `LatteEngineCreated`
+event to receive and customize the returned engine instance.
 
 ```php
 use Daun\LaravelLatte\Events\LatteEngineCreated;

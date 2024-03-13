@@ -64,6 +64,7 @@ return [
     |--------------------------------------------------------------------------
     |
     | Extensions that will be automatically registered with the Latte engine.
+    | This is the best place to register custom filters and tags.
     |
     */
 
