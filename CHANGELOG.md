@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.2.1] - 2024-03-20
+
+* Slim down dist archive
+
 ## [1.2.0] - 2024-03-13
 
 * Add support for Laravel 11
@@ -14,6 +18,7 @@
 
 * Initial release
 
+[1.2.1]: https://github.com/daun/laravel-latte/releases/tag/1.2.1
 [1.2.0]: https://github.com/daun/laravel-latte/releases/tag/1.2.0
 [1.1.0]: https://github.com/daun/laravel-latte/releases/tag/1.1.0
 [1.0.0]: https://github.com/daun/laravel-latte/releases/tag/1.0.0
