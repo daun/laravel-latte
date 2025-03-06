@@ -14,8 +14,7 @@ class LatteFileLoader implements Loader
 {
     public function __construct(
         protected Factory $view
-    ) {
-    }
+    ) {}
 
     public function finder(): ViewFinderInterface
     {

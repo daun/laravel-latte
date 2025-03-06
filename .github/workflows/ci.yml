@@ -1,8 +1,9 @@
 name: CI
 
 on:
-  push:
   pull_request:
+  push:
+    branches: [main]
 
 jobs:
   tests:
@@ -11,11 +12,28 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        php: [ '8.1', '8.2', '8.3' ]
-        laravel: [ '9', '10', '11' ]
+        php: [8.1, 8.2, 8.3]
+        laravel: [9.*, 10.*, 11.*, 12.*]
+        include:
+          - laravel: 9.*
+            testbench: 7.*
+            pest: 1.*
+          - laravel: 10.*
+            testbench: 8.*
+            pest: 2.*
+          - laravel: 11.*
+            testbench: 9.*
+            pest: 3.*
+          - laravel: 12.*
+            testbench: 10.*
+            pest: 3.*
+            coverage: true
+            lint: true
         exclude:
-          - php: '8.1'
-            laravel: '11'
+          - laravel: 11.*
+            php: 8.1
+          - laravel: 12.*
+            php: 8.1
 
     name: PHP ${{ matrix.php }} / Laravel ${{ matrix.laravel }}
 
@@ -30,41 +48,16 @@ jobs:
           tools: composer:v2
           coverage: xdebug
 
-      - name: Setup Problem Matchers
+      - name: Setup problem matchers
         run: echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
 
-      - name: Select Laravel 9
-        uses: nick-invision/retry@v3
-        if: ${{ matrix.laravel == '9' }}
-        with:
-          timeout_minutes: 3
-          max_attempts: 3
-          command: composer require "laravel/framework:9.*" "orchestra/testbench:^7.40" "pestphp/pest:^1.22" "pestphp/pest-plugin-laravel:^1.4" --no-update --no-interaction
-
-      - name: Select Laravel 10
-        uses: nick-invision/retry@v3
-        if: ${{ matrix.laravel == '10' }}
-        with:
-          timeout_minutes: 3
-          max_attempts: 3
-          command: composer require "laravel/framework:10.*" "orchestra/testbench:^8.21" "pestphp/pest:^2.34" "pestphp/pest-plugin-laravel:^2.3" --no-update --no-interaction
-
-      - name: Select Laravel 11
-        uses: nick-invision/retry@v3
-        if: ${{ matrix.laravel == '11' }}
-        with:
-          timeout_minutes: 3
-          max_attempts: 3
-          command: composer require "laravel/framework:11.*" "orchestra/testbench:^9.0" "pestphp/pest:^2.34" "pestphp/pest-plugin-laravel:^2.3" --no-update --no-interaction
-
-      - name: Install PHP Dependencies
-        uses: nick-invision/retry@v3
-        with:
-          timeout_minutes: 3
-          max_attempts: 3
-          command: composer update --no-interaction --no-progress
+      - name: Install dependencies
+        run: |
+          composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" "pestphp/pest:${{ matrix.pest }}" "pestphp/pest-plugin-laravel:${{ matrix.pest }}" --no-interaction --no-update
+          composer update --prefer-dist --no-interaction --no-progress
 
       - name: Check code style
+        if: ${{ matrix.lint }}
         run: composer run lint
 
       - name: Execute tests
@@ -72,7 +65,7 @@ jobs:
 
       - name: Check code coverage
         uses: codecov/codecov-action@v4
-        if: ${{ matrix.php == '8.3' && matrix.laravel == '10' }}
+        if: ${{ matrix.coverage }}
         with:
           file: ./coverage.xml
           token: ${{ secrets.CODECOV_TOKEN }}

@@ -15,8 +15,7 @@ final class LatteEngineFactory
     public function __construct(
         protected Loader $loader,
         protected Repository $config
-    ) {
-    }
+    ) {}
 
     public static function make(Loader $loader, Repository $config): Engine
     {
@@ -77,7 +76,7 @@ final class LatteEngineFactory
     {
         $extensions = $this->config->get('latte.extensions', []);
 
-        return collect($extensions)->map(fn ($class) => new $class());
+        return collect($extensions)->map(fn ($class) => new $class);
     }
 
     protected function getTranslatorExtension(): ?Extension
@@ -86,7 +85,7 @@ final class LatteEngineFactory
         if ($translator === null) {
             return null;
         } elseif (is_string($translator)) {
-            return new $translator();
+            return new $translator;
         } else {
             throw new \Exception('Invalid translator extension: must be class name or null.');
         }
