@@ -13,6 +13,5 @@ class LatteEngineCreated
 
     public function __construct(
         public Engine $engine
-    ) {
-    }
+    ) {}
 }
