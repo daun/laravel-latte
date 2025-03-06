@@ -38,15 +38,15 @@
     "require": {
         "php": "^8.1",
         "latte/latte": "^3.0",
-        "laravel/framework": "^9.0 || ^10.0 || ^11.0"
+        "laravel/framework": "^9.0 || ^10.0 || ^11.0 || ^12.0"
     },
     "require-dev": {
-        "larastan/larastan": "^2.9",
+        "larastan/larastan": "^3.0",
         "laravel/pint": "^1.14",
-        "orchestra/testbench": "^8.21",
+        "orchestra/testbench": "^10.0",
         "mockery/mockery": "^1.6",
-        "pestphp/pest": "^2.34",
-        "pestphp/pest-plugin-laravel": "^2.3"
+        "pestphp/pest": "^3.0",
+        "pestphp/pest-plugin-laravel": "^3.0"
     },
     "scripts": {
         "format": "./vendor/bin/pint",
