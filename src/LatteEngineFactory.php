@@ -64,7 +64,11 @@ final class LatteEngineFactory
 
     protected function getCacheDirectory(): ?string
     {
-        return $this->config->get('latte.compiled') ?: $this->config->get('view.compiled') ?: null;
+        $dir = $this->config->get('latte.compiled')
+            ?: $this->config->get('view.compiled')
+            ?: null;
+
+        return $dir ? realpath($dir) : null;
     }
 
     protected function getDefaultLayout(): ?string

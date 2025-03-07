@@ -12,7 +12,7 @@ return [
     | Extensions
     |--------------------------------------------------------------------------
     |
-    | File extensions for Latte view files.
+    | File extensions to accept for Latte files.
     |
     */
 
@@ -27,19 +27,21 @@ return [
     |--------------------------------------------------------------------------
     |
     | Determines where compiled Latte templates will be stored. By default, this
-    | just uses whatever is configured for standard Blade views.
+    | will use the standard path of the `view.compiled` config. Customize by
+    | passing an absolute path to a different directory.
     |
     */
 
-    // 'compiled' => realpath(storage_path('framework/views/latte')),
+    'compiled' => null,
 
     /*
     |--------------------------------------------------------------------------
     | Default Layout
     |--------------------------------------------------------------------------
     |
-    | Define a default layout file to be used by all template files. Useful if
-    | you require a common layout file for all views.
+    | Define a common parent layout used by all templates. Individual templates
+    | no longer need to use the `{layout}` tag unless they want to override or
+    | disable the layout entirely using `{layout none}`.
     |
     */
 
@@ -52,7 +54,7 @@ return [
     |
     | The translator extension to use in Latte templates. The default acts as a
     | bridge to Laravel's translation service and allows using any translations
-    | registered in your app to be used. Feel free to disable or customize.
+    | registered in the app. Define a custom class or disable by passing `null`.
     |
     */
 
@@ -64,7 +66,7 @@ return [
     |--------------------------------------------------------------------------
     |
     | Extensions that will be automatically registered with the Latte engine.
-    | This is the best place to register custom filters and tags.
+    | This is the best place to add custom filters and tags.
     |
     */
 
