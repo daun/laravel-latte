@@ -69,7 +69,7 @@ test('throws for invalid translator', function () {
     $this->bootServiceProvider();
 
     expect(fn () => $this->app->get('latte.engine'))
-        ->toThrow(\Exception::class, 'Invalid translator extension: must be class name or null.');
+        ->toThrow(Exception::class, 'Invalid translator extension: must be class name or null.');
 });
 
 test('works without translator', function () {

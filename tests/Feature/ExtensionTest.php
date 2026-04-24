@@ -1,12 +1,13 @@
 <?php
 
+use Latte\Engine;
 use TestExtensions\CustomExtension;
 
 test('registers custom extensions', function () {
     $this->modifyConfig('latte.extensions', [CustomExtension::class]);
     $this->bootServiceProvider();
 
-    /** @var \Latte\Engine $engine */
+    /** @var Engine $engine */
     $engine = $this->app->get('latte.engine');
     $extensions = collect($engine->getExtensions())->map(fn ($extension) => get_class($extension));
     expect($extensions)->toContain(CustomExtension::class);

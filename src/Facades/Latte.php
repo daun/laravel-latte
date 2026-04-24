@@ -3,6 +3,7 @@
 namespace Daun\LaravelLatte\Facades;
 
 use Illuminate\Support\Facades\Facade;
+use Latte\Engine;
 
 /**
  * @method static void addExtension(\Latte\Extension $extension)
@@ -11,7 +12,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static void addFunction(string $name, callable $callback)
  * @method static void addProvider(string $name, mixed $value)
  *
- * @see \Latte\Engine
+ * @see Engine
  */
 class Latte extends Facade
 {
