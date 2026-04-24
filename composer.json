@@ -42,11 +42,12 @@
     },
     "require-dev": {
         "larastan/larastan": "^2.0 || ^3.0",
+        "laravel/framework": "^13.0",
         "laravel/pint": "^1.0",
-        "orchestra/testbench": "^10.0",
+        "orchestra/testbench": "^10.0 || ^11.0",
         "mockery/mockery": "^1.6",
-        "pestphp/pest": "^3.0",
-        "pestphp/pest-plugin-laravel": "^3.0"
+        "pestphp/pest": "^3.0 || ^4.0",
+        "pestphp/pest-plugin-laravel": "^3.0 || ^4.0"
     },
     "scripts": {
         "format": "./vendor/bin/pint",
