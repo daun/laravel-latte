@@ -1,9 +1,8 @@
 # Laravel Latte
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/daun/laravel-latte.svg)](https://packagist.org/packages/daun/laravel-latte)
-[![Test Status](https://img.shields.io/github/actions/workflow/status/daun/laravel-latte/ci.yml?label=tests)](https://github.com/daun/laravel-latte/actions/workflows/ci.yml)
-[![Code Coverage](https://img.shields.io/codecov/c/github/daun/laravel-latte)](https://app.codecov.io/gh/daun/laravel-latte)
-[![License](https://img.shields.io/github/license/daun/laravel-latte.svg)](https://github.com/daun/laravel-latte/blob/master/LICENSE)
+> **This package is no longer maintained.**  
+> Please use [miko/laravel-latte](https://github.com/miloslavkostir/laravel-latte) instead.
+
 
 Add support for the [Latte](https://latte.nette.org) templating engine in [Laravel](https://laravel.com) views.
 
