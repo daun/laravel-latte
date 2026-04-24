@@ -1,8 +1,8 @@
 # Laravel Latte
 
-> **This package is no longer maintained.**  
-> Please use [miko/laravel-latte](https://github.com/miloslavkostir/laravel-latte) instead.
+> ⚠️ **This package is no longer maintained.** Please use [miko/laravel-latte](https://github.com/miloslavkostir/laravel-latte) instead.
 
+---
 
 Add support for the [Latte](https://latte.nette.org) templating engine in [Laravel](https://laravel.com) views.
 
